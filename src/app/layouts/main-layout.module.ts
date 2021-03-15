@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MainLayoutRoutes } from './main-layout.routing';
 import { FormsModule } from '@angular/forms';
-import { MainLayoutComponent } from './main-layout.component';
+import { MainLayoutComponent } from './main-layout/main-layout.component';
 import { ComponentsModule } from 'src/app/components/components.module';
 
 
@@ -13,9 +12,9 @@ import { ComponentsModule } from 'src/app/components/components.module';
   exports: [MainLayoutComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild(MainLayoutRoutes),
+    RouterModule,
     FormsModule,
     ComponentsModule
   ]
 })
-export class MainLayoutModule { }
+export class LayoutsModule { }
