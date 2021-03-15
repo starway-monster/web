@@ -50,7 +50,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/scss/black-dashboard.scss"
             ],
             "scripts": []
           },
@@ -113,7 +114,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/assets/scss/black-dashboard.scss"
             ],
             "scripts": []
           }
