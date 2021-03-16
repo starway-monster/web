@@ -15,7 +15,7 @@ export class ChunkPipe implements PipeTransform {
         let nestedArr = arr.slice(i, i + n);
         const undefinedCount = n - nestedArr.length;
         if (undefinedCount > 0) {
-          nestedArr = [...nestedArr, ...Array.of(undefinedCount).fill(undefined)];
+          nestedArr = [...nestedArr, ...Array(undefinedCount).fill(undefined)];
         }
         newArr.push(nestedArr);
       }

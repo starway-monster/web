@@ -35,9 +35,25 @@
 
             <div class="graph">
               <ng-container *ngFor="let zonesPathGroup of zonesPath | chunk:3; index as pathIndex">
-                <div class="graph__row">
+                <div class="graph__row" [class.reverse]="pathIndex % 2 === 1">
                   <ng-container *ngFor="let item of zonesPathGroup; index as itemIndex">
-                    <div class="horizontal-arrow" *ngIf="itemIndex > 0">
+                    <div class="item" [class.hidden]="item === undefined">
+                      <div class="item__row">
+                        <div class="item__cell item-right-arrow"
+                          [class.hidden]="pathIndex % 2 === 0 && itemIndex === 0
+                            || pathIndex % 2 === 1 && itemIndex === zonesPathGroup.length-1">
+                          {{pathIndex % 2 === 0 ? '>' : '<' }}
+                        </div>
+                        <div class="item__cell item_content">{{item}}</div>
+                      </div>
+                      <div class="item__row">
+                        <div class="item__cell"></div>
+                        <div class="item__cell item-bottom-arrow"
+                          [class.hidden]="itemIndex !== zonesPathGroup.length-1"
+                        >V</div>
+                      </div>
+                    </div>
+                    <!-- <div class="horizontal-arrow" *ngIf="itemIndex > 0">
                       {{pathIndex % 2 === 0 ? '>' : '<' }}
                     </div>
                     <div  class="graph__item">
@@ -45,7 +61,7 @@
                         <div class="graph__item_content">{{item}}</div>
                         <div class="graph__item_arrow">V</div>
                       </ng-container>
-                    </div>
+                    </div> -->
                   </ng-container>
                 </div>
               </ng-container>

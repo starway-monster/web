@@ -4,31 +4,23 @@
   &__row {
     display: flex;
 
-    &:nth-of-type(even) {
+    &.reverse {
       flex-direction: row-reverse;
-    }
-
-    &:last-of-type {
-      .graph__item {
-        .graph__item_arrow {
-          visibility: hidden;
-        }
-      }
     }
   }
 
-  &__item {
-    margin: 8px 8px 0 8px;
+  .item {
     width: 100%;
+    display: table;
+    border-spacing: 0;
+    border-collapse: collapse;
 
-    &_arrow {
-      visibility: hidden;
+    &__row {
+      display: table-row;
     }
 
-    &:last-of-type {
-      .graph__item_arrow {
-        visibility: visible;
-      }
+    &__cell {
+      display: table-cell;
     }
 
     &_content {
@@ -38,9 +30,45 @@
       padding: 8px;
       margin-bottom: 8px;
     }
+
+    .item-right-arrow {
+      width: 1%;
+      vertical-align: middle;
+    }
+
+    .item-bottom-arrow {
+      text-align: center;
+    }
   }
 
-  .horizontal-arrow {
-    width: 10px;
-  }
+  // &__item {
+  //   margin: 8px 8px 0 8px;
+  //   width: 100%;
+
+  //   &_arrow {
+  //     visibility: hidden;
+  //   }
+
+  //   &:last-of-type {
+  //     .graph__item_arrow {
+  //       visibility: visible;
+  //     }
+  //   }
+
+  //   &_content {
+  //     height: 50px;
+  //     background-color: rgba(255,255,255,.1);
+  //     border-radius: 4px;
+  //     padding: 8px;
+  //     margin-bottom: 8px;
+  //   }
+  // }
+
+  // .horizontal-arrow {
+  //   width: 10px;
+  // }
+}
+
+.hidden {
+  visibility: hidden;
 }
