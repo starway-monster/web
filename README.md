@@ -32,6 +32,8 @@ Build or rebuild container:
 Runs processes in isolated containers
 * `docker run -it -d --rm -p 9000:80 starway-monster-web:v1`
 
+After that, the application will be available: http://localhost:9000
+
 ### Via Docker-Compose
 
 Build or rebuild services:
@@ -39,6 +41,8 @@ Build or rebuild services:
 
 Builds, (re)creates, starts, and attaches to containers for a service:
 * `docker-compose up -d`
+
+After that, the application will be available: http://localhost:9000
 
 ![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) Danger zone!
 
