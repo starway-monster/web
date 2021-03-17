@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChunkPipe } from './pipes/chunk.pipe';
+import { HorizontalSnakeGraphComponent } from './components/horizontal-snake-graph/horizontal-snake-graph.component';
 
 
 
 @NgModule({
-  declarations: [ChunkPipe],
-  exports: [ChunkPipe],
+  declarations: [HorizontalSnakeGraphComponent],
+  exports: [HorizontalSnakeGraphComponent],
   imports: [
     CommonModule
   ]

@@ -1,0 +1,28 @@
+<div class="graph">
+  <ng-container *ngFor="let graphItemGroup of graphItemGroups">
+    <div class="graph__row" [class.reverse]="graphItemGroup.isReverseRow">
+      <ng-container *ngFor="let item of graphItemGroup.items">
+        <div class="graph__item" [class.hidden]="item.value === undefined">
+          <div class="graph__item__row">
+            <div class="graph__item__cell item-right-arrow"
+              [class.hidden]="item.horizontalArrowHidden">
+              <span class="material-icons">
+                {{!graphItemGroup.isReverseRow ? 'keyboard_arrow_right' : 'keyboard_arrow_left' }}
+              </span>
+            </div>
+            <div class="graph__item__cell item-content">{{item.value}}</div>
+          </div>
+          <div class="graph__item__row">
+            <div class="graph__item__cell"></div>
+            <div class="graph__item__cell item-bottom-arrow"
+              [class.hidden]="!item.isLastInRow || graphItemGroup.isLastRow">
+              <span class="material-icons">
+                keyboard_arrow_down
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
+</div>

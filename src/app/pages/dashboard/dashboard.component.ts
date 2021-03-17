@@ -1,17 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'sm-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
 
-  zonesPath = ['Zone1','Zone2','Zone3','Zone4', 'Zone5','Zone6','Zone7','Zone8'];
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  zonesPath = ['Zone1','Zone2','Zone3','Zone4', 'Zone5','Zone6','Zone7','Zone8',];
 
 }
