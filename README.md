@@ -22,6 +22,35 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 
 Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
+## Running in a Docker container:
+
+### Pure Docker
+
+Build or rebuild container:
+* `docker build -t starway-monster-web:v1 .`
+
+Runs processes in isolated containers
+* `docker run -it -d --rm -p 9000:80 starway-monster-web:v1`
+
+### Via Docker-Compose
+
+Build or rebuild services:
+* `docker-compose build`
+
+Builds, (re)creates, starts, and attaches to containers for a service:
+* `docker-compose up -d`
+
+![#f03c15](https://via.placeholder.com/15/f03c15/000000?text=+) Danger zone!
+
+Stops containers and removes containers, networks, volumes, and images
+created by `up`.
+
+* Not for production!
+
+```diff
+- docker-compose down -v
+```
+
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
