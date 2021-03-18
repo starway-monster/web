@@ -10,7 +10,11 @@
                 {{!graphItemGroup.isReverseRow ? 'keyboard_arrow_right' : 'keyboard_arrow_left' }}
               </span>
             </div>
-            <div class="graph__item__cell item-content">{{item.value}}</div>
+            <div class="graph__item__cell item-content"
+              [style.background-color]="getColor(item.value)"
+            >
+              {{item.value}}
+            </div>
           </div>
           <div class="graph__item__row">
             <div class="graph__item__cell"></div>

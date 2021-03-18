@@ -22,6 +22,9 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
   @Input()
   data: string[];
 
+  @Input()
+  colors: d3.ScaleOrdinal<string, string, never>;
+
   itemsInRow = 3;
 
   graphItemGroups: IGraphItemGroup[];
@@ -65,5 +68,9 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
       }
     }
     return newArr;
+  }
+
+  getColor(value: string) {
+    return `${this.colors(value)}4D`;
   }
 }

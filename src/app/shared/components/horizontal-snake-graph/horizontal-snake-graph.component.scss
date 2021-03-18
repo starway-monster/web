@@ -32,6 +32,12 @@ $arrow-cell-size: 50px;
       border-radius: 4px;
       padding: 8px;
       margin-bottom: 8px;
+      opacity: 1;
+      mix-blend-mode: lighten;
+
+      &:hover {
+        opacity: 1;
+      }
     }
 
     .item-right-arrow {

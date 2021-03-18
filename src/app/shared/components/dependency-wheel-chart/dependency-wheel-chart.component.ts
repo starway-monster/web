@@ -1,0 +1,173 @@
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import * as d3 from 'd3';
+import { ChordSubgroup, DefaultArcObject } from 'd3';
+
+export interface ChordsData {
+  source: string;
+  target: string;
+  value: number;
+}
+
+@Component({
+  selector: 'sm-dependency-wheel-chart',
+  templateUrl: './dependency-wheel-chart.component.html',
+  styleUrls: ['./dependency-wheel-chart.component.scss']
+})
+export class DependencyWheelChartComponent implements OnInit {
+  @Input()
+  data: ChordsData[] = [];
+
+  @Input()
+  names: string[] = [];
+
+  @Input()
+  colors: d3.ScaleOrdinal<string, string, never>;
+
+  @Input()
+  hoveredChord: ChordsData;
+
+  @Input()
+  hoveredGroup: string;
+
+  matrix: number[][];
+  width = 900;
+  height = this.width;
+  innerRadius = Math.min(this.width, this.height) * 0.5 - 20;
+  outerRadius = this.innerRadius + 20;
+  ribbon = d3.ribbonArrow()
+    .radius(this.innerRadius - 1)
+    .padAngle(1 / this.innerRadius);
+  arc = d3.arc()
+    .innerRadius(this.innerRadius)
+    .outerRadius(this.outerRadius)
+  chord = d3.chordDirected()
+    .padAngle(12 / this.innerRadius)
+    .sortSubgroups(d3.descending)
+    .sortChords(d3.descending)
+  formatValue = x => `${x.toFixed(0)}B`;
+  svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
+
+  ngOnInit(): void {  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.data && this.data) {
+      this.svg = this.createSvg();
+      this.createChart();
+      this.matrix = this.getMatrix();
+      this.createChords();
+      this.createCircle();
+    }
+    if (changes.hoveredChord) {
+      this.handleChordHover(this.hoveredChord);
+    }
+    if (changes.hoveredGroup) {
+      this.handleGroupHover(this.hoveredGroup);
+    }
+  }
+
+  private createSvg() {
+    const svg = d3.select('figure#chart')
+      .append('svg')
+      .attr('viewBox', `${-this.width / 2} ${-this.height / 2} ${this.width} ${this.height}`);
+    return svg;
+  }
+
+  private createChart() {
+    this.svg.append('path')
+      .attr('id', 'wheel-chart')
+      .attr('fill', 'rgb(0,0,0,0.2)')
+      .attr('d', d3.arc()({outerRadius: this.outerRadius, startAngle: 0, endAngle: 2 * Math.PI} as DefaultArcObject));
+  }
+
+  private createChords() {
+    this.svg.append('g')
+      .selectAll('g')
+      .data(this.getChordData())
+      .join('path')
+        .classed('chord', true)
+        .attr('d', <any>this.ribbon)
+        .attr('fill-opacity', 0.3)
+        .attr('fill', d => this.colors(this.names[d.target.index]))
+        .style('mix-blend-mode', 'lighten') // exclusion, lighten
+      .on('mouseover', this.onChordMouseEvent(true))
+      .on('mouseout', this.onChordMouseEvent(false))
+  }
+
+  private createCircle() {
+    this.svg.append('g')
+      .attr('fill-opacity', 0.3)
+      .selectAll('g')
+      .data(this.getChordGroupData())
+      .join('g')
+        .call(g => g.append('path')
+          .classed('arc', true)
+          .attr('d', <any>this.arc)
+          .attr('fill', d => this.colors(this.names[d.index]))
+          .attr('stroke', '#fff'))
+      .on('mouseover', this.onArcMouseEvent(true))
+      .on('mouseout', this.onArcMouseEvent(false));
+  }
+
+  private getMatrix() {
+    const index = new Map(this.names.map((name, i) => [name, i]));
+    const matrix = Array.from(index, () => new Array(this.names.length).fill(0));
+    for (const d of this.data)
+      matrix[index.get(d.source)][index.get(d.target)] += d.value;
+    return matrix;
+  }
+
+  private getChordData() {
+    return this.chord(this.matrix);
+  }
+
+  private getChordGroupData() {
+    return this.getChordData().groups;
+  }
+
+  private onChordMouseEvent(isOver: boolean) {
+    return (mouseEvent: any, data: any) => {
+      d3.selectAll('.arc')
+        .filter((d: ChordSubgroup) => d.index === data.source.index || d.index === data.target.index)
+        .attr('fill-opacity', this.getOpacity(isOver))
+      d3.select(mouseEvent.srcElement)
+        .attr('fill-opacity', this.getOpacity(isOver))
+    }
+  }
+
+  private onArcMouseEvent(isOver: boolean) {
+    return (mouseEvent: any, _data: any) => {
+      d3.select(mouseEvent.srcElement)
+        .attr('fill-opacity', this.getOpacity(isOver))
+    }
+  }
+
+
+  private handleGroupHover(hoveredGroup: string) {
+    d3.selectAll('.arc')
+      .attr('fill-opacity', this.getOpacity(false));
+    d3.selectAll('.arc')
+      .filter((d: ChordSubgroup) => this.groupFilter(d, hoveredGroup))
+      .attr('fill-opacity', this.getOpacity(true));
+  }
+
+  private handleChordHover(hoveredChord: ChordsData) {
+    d3.selectAll('.arc')
+      .attr('fill-opacity', this.getOpacity(false));
+    d3.selectAll('.arc')
+      .filter((d: ChordSubgroup) => this.chordFilter(d, hoveredChord))
+      .attr('fill-opacity', this.getOpacity(true));
+  }
+
+  private groupFilter(d: ChordSubgroup, group: string) {
+    return group && (d.index === this.names.indexOf(group));
+  }
+
+  private chordFilter(d: ChordSubgroup, chord: ChordsData) {
+    return chord && (d.index === this.names.indexOf(chord.source)
+          || d.index === this.names.indexOf(chord.target));
+  }
+
+  private getOpacity(isOver: boolean) {
+    return isOver ? 1 : 0.3;
+  }
+}
