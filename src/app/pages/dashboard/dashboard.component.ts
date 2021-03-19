@@ -1,24 +1,43 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ApolloQueryResult } from '@apollo/client/core';
 import * as d3 from 'd3';
+import { Subscription } from 'rxjs';
+import { IZonesResult } from 'src/app/api/models/zone.model';
+import { ZoneService } from 'src/app/api/services/zone.service';
 import { ChordsData } from 'src/app/shared/components/dependency-wheel-chart/dependency-wheel-chart.component';
 
 @Component({
   selector: 'sm-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DashboardComponent {
-
-  zonesPath = ['Zone1','Zone2','Zone3','Zone4', 'Zone5','Zone6','Zone7','Zone8'];
+export class DashboardComponent implements OnInit {
+  zonesPath = [];
   colors = d3.scaleOrdinal(this.zonesPath, d3.schemeCategory10);
   colorsArr = this.zonesPath.map(name => this.colors(name));
   zoneDependencies: ChordsData[] = [
-    {source:'Zone1', target:'Zone2', value:1},
-    {source:'Zone2', target:'Zone3', value:1},
-    {source:'Zone3', target:'Zone4', value:1},
-    {source:'Zone4', target:'Zone5', value:1},
-    {source:'Zone5', target:'Zone6', value:1},
-    {source:'Zone6', target:'Zone7', value:1},
-    {source:'Zone7', target:'Zone8',value:1}
+    {source:'irishub-1', target:'okwme', value:1},
+    {source:'okwme', target:'cosmoshub-4', value:1},
+    {source:'cosmoshub-4', target:'swap-testnet-2001', value:1},
+    {source:'swap-testnet-2001', target:'musselnet-3', value:1},
+
   ];
+  querySubstription: Subscription;
+
+  constructor(private readonly zonesService: ZoneService,
+    private readonly changeDetectorRef: ChangeDetectorRef) {  }
+
+  ngOnInit() {
+    this.querySubstription = this.zonesService.getAllZones()
+      .subscribe((result: ApolloQueryResult<IZonesResult>) => {
+        this.zonesPath = result?.data?.zones.map(z => z.name) ?? [];
+        this.changeDetectorRef.detectChanges();
+      });
+  }
+
+  ngOnDestroy() {
+    this.querySubstription.unsubscribe();
+  }
 }
+

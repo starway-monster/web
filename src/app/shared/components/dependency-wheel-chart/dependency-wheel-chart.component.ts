@@ -34,15 +34,15 @@ export class DependencyWheelChartComponent implements OnInit {
   height = this.width;
   innerRadius = Math.min(this.width, this.height) * 0.5 - 20;
   outerRadius = this.innerRadius + 20;
-  ribbon = d3.ribbonArrow()
-    .radius(this.innerRadius - 1)
+  ribbon = d3.ribbon()
+    .radius(this.innerRadius - 15)
     .padAngle(1 / this.innerRadius);
   arc = d3.arc()
     .innerRadius(this.innerRadius)
     .outerRadius(this.outerRadius)
   chord = d3.chordDirected()
-    .padAngle(12 / this.innerRadius)
-    .sortSubgroups(d3.descending)
+    .padAngle(0.04)
+    .sortSubgroups(d3.ascending)
     .sortChords(d3.descending)
   formatValue = x => `${x.toFixed(0)}B`;
   svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
@@ -51,11 +51,10 @@ export class DependencyWheelChartComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.data && this.data) {
-      this.svg = this.createSvg();
-      this.createChart();
-      this.matrix = this.getMatrix();
-      this.createChords();
-      this.createCircle();
+      this.updateChart();
+    }
+    if (changes.names && this.names) {
+      this.updateChart();
     }
     if (changes.hoveredChord) {
       this.handleChordHover(this.hoveredChord);
@@ -63,6 +62,16 @@ export class DependencyWheelChartComponent implements OnInit {
     if (changes.hoveredGroup) {
       this.handleGroupHover(this.hoveredGroup);
     }
+  }
+
+  private updateChart() {
+    if (!this.svg) {
+      this.svg = this.createSvg();
+      this.createChart();
+    }
+    this.matrix = this.getMatrix();
+    this.createChords();
+    this.createCircle();
   }
 
   private createSvg() {
@@ -102,17 +111,22 @@ export class DependencyWheelChartComponent implements OnInit {
         .call(g => g.append('path')
           .classed('arc', true)
           .attr('d', <any>this.arc)
-          .attr('fill', d => this.colors(this.names[d.index]))
-          .attr('stroke', '#fff'))
+          .attr('fill', d => this.colors(this.names[d.index])))
       .on('mouseover', this.onArcMouseEvent(true))
       .on('mouseout', this.onArcMouseEvent(false));
   }
 
   private getMatrix() {
-    const index = new Map(this.names.map((name, i) => [name, i]));
-    const matrix = Array.from(index, () => new Array(this.names.length).fill(0));
-    for (const d of this.data)
-      matrix[index.get(d.source)][index.get(d.target)] += d.value;
+    const existedNames = [...new Set([...this.data.map(d => d.source), ...this.data.map(d => d.target)])];
+    const index = new Map(existedNames.map((name, i) => [name, i]));
+    const matrix = Array.from(index, () => new Array(existedNames.length).fill(0));
+    for (const d of this.data) {
+      const sourceIndex = index.get(d.source);
+      const targetIndex = index.get(d.target);
+      if (sourceIndex !== undefined && targetIndex != undefined) {
+        matrix[sourceIndex][targetIndex] += d.value;
+      }
+    }
     return matrix;
   }
 
