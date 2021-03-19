@@ -7,28 +7,26 @@
         </div>
         <div class="card-body">
             <div class="form-inline">
-              <mat-form-field class="col-12 col-md-3" appearance="fill">
-                <mat-label>From Zone</mat-label>
-                <mat-select>
-                  <mat-option *ngFor="let zone of zonesPath" [value]="zone"
-                    [style.color]="colors(zone)">{{zone}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field class="col-12 col-md-3" appearance="fill">
-                <mat-label>To Zone</mat-label>
-                <mat-select>
-                  <mat-option *ngFor="let zone of zonesPath" [value]="zone"
-                    [style.color]="colors(zone)">{{zone}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <mat-form-field class="col-12 col-md-4" appearance="fill">
-                <mat-label>Exclude Zone</mat-label>
-                <mat-select multiple>
-                  <mat-option *ngFor="let zone of zonesPath" [value]="zone"
-                    [style.color]="colors(zone)">{{zone}}</mat-option>
-                </mat-select>
-              </mat-form-field>
-              <button mat-flat-button class="search-btn col-12 col-md-2 pb-18">Search</button>
+              <sm-zone-selector class="col-12 col-md-3"
+                [items]="zonesPath"
+                [label]="'From Zone'"
+                [colors]="colors"
+                [(selectedItem)]="selectedFromZone">
+              </sm-zone-selector>
+              <sm-zone-selector class="col-12 col-md-3"
+                [items]="zonesPath"
+                [label]="'To Zone'"
+                [colors]="colors"
+                [(selectedItem)]="selectedToZone">
+              </sm-zone-selector>
+              <sm-zone-selector class="col-12 col-md-4"
+                [isMultiple]="true"
+                [items]="zonesPath"
+                [label]="'Exclude Zone'"
+                [colors]="colors"
+                [(selectedItem)]="excludedZones">
+              </sm-zone-selector>
+              <button mat-flat-button class="search-btn col-12 col-md-2 pb-18" (click)="onSearch()">Search</button>
             </div>
         </div>
       </div>

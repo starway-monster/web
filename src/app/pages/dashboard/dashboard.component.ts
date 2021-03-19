@@ -21,9 +21,11 @@ export class DashboardComponent implements OnInit {
     {source:'okwme', target:'cosmoshub-4', value:1},
     {source:'cosmoshub-4', target:'swap-testnet-2001', value:1},
     {source:'swap-testnet-2001', target:'musselnet-3', value:1},
-
   ];
   querySubstription: Subscription;
+  selectedFromZone: string;
+  selectedToZone: string;
+  excludedZones: string[];
 
   constructor(private readonly zonesService: ZoneService,
     private readonly changeDetectorRef: ChangeDetectorRef) {  }
@@ -38,6 +40,12 @@ export class DashboardComponent implements OnInit {
 
   ngOnDestroy() {
     this.querySubstription.unsubscribe();
+  }
+
+  onSearch() {
+    console.log(this.selectedFromZone);
+    console.log(this.selectedToZone);
+    console.log(this.excludedZones);
   }
 }
 
