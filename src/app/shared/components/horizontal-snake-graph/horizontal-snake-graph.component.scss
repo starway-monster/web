@@ -27,13 +27,28 @@ $arrow-cell-size: 50px;
     }
 
     .item-content {
+      width: 80px;
       height: 50px;
-      background-color: rgba(255,255,255,.1);
-      border-radius: 4px;
       padding: 8px;
       margin-bottom: 8px;
       opacity: 1;
       mix-blend-mode: lighten;
+      position: relative;
+
+      &__circle {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 2px solid white;
+      }
+
+      &__text {
+        color: white;
+        position: absolute;
+        top: -15px;
+        left: 0px;
+        white-space: nowrap;
+      }
 
       &:hover {
         opacity: 1;
@@ -41,15 +56,75 @@ $arrow-cell-size: 50px;
     }
 
     .item-right-arrow {
-      width: $arrow-cell-size;
       vertical-align: middle;
       text-align: center;
+
+      .line {
+        height: 2px;
+        background-color: white;
+        position: relative;
+        margin-top: 10px;
+
+        &::after{
+          content: '';
+          position: absolute;
+          right: -3px;
+          top: -4px;
+          width: 0;
+          height: 0;
+          border-left:  10px solid white;
+          border-top: 5px solid transparent;
+          border-bottom: 5px solid transparent;
+          clear: both;
+        }
+      }
+
+      .execute-btn {
+        padding: 10px;
+        background-color: #424242;
+        margin-top: 15px;
+        width: 100px;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
 
     .item-bottom-arrow {
-      height: $arrow-cell-size;
+      height: 100px;
       vertical-align: middle;
       text-align: center;
+
+      .line {
+        width: 2px;
+        background-color: white;
+        position: relative;
+        height: 65px;
+        margin-bottom: 20px;
+        margin-left: auto;
+        margin-right: auto;
+
+        &::after{
+          content: '';
+          position: absolute;
+          right: -4px;
+          bottom: -4px;
+          width: 0;
+          height: 0;
+          border-top: 10px solid white;
+          border-left:  5px solid transparent;
+          border-right: 5px solid transparent;
+          clear: both;
+        }
+      }
+
+      .execute-btn {
+        padding: 10px;
+        background-color: #424242;
+        margin-top: 15px;
+        width: 100px;
+        margin-left: auto;
+        margin-right: auto;
+      }
     }
   }
 }

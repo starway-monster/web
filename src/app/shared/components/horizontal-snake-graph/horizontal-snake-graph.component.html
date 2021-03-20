@@ -6,23 +6,20 @@
           <div class="graph__item__row">
             <div class="graph__item__cell item-right-arrow"
               [class.hidden]="item.horizontalArrowHidden">
-              <span class="material-icons">
-                {{!graphItemGroup.isReverseRow ? 'keyboard_arrow_right' : 'keyboard_arrow_left' }}
-              </span>
+              <div class="line"></div>
+              <div class="execute-btn">Execute</div>
             </div>
-            <div class="graph__item__cell item-content"
-              [style.background-color]="getColor(item.value)"
-            >
-              {{item.value}}
+            <div class="graph__item__cell item-content">
+              <span class="item-content__text">{{item.value}}</span>
+              <div class="item-content__circle" [style.background-color]="getColor(item.value)"></div>
             </div>
           </div>
           <div class="graph__item__row">
             <div class="graph__item__cell"></div>
             <div class="graph__item__cell item-bottom-arrow"
               [class.hidden]="!item.isLastInRow || graphItemGroup.isLastRow">
-              <span class="material-icons">
-                keyboard_arrow_down
-              </span>
+              <div class="line"></div>
+              <!-- <div class="execute-btn">Execute</div> -->
             </div>
           </div>
         </div>
