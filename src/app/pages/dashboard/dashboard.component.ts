@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { ApolloQueryResult } from '@apollo/client/core';
 import * as d3 from 'd3';
 import { Subscription } from 'rxjs';
+import { takeLast } from 'rxjs/operators';
 import { IZonesResult } from 'src/app/api/models/zone.model';
 import { ZoneService } from 'src/app/api/services/zone.service';
 import { ChordsData } from 'src/app/shared/components/dependency-wheel-chart/dependency-wheel-chart.component';
@@ -43,9 +44,9 @@ export class DashboardComponent implements OnInit {
   }
 
   onSearch() {
-    console.log(this.selectedFromZone);
-    console.log(this.selectedToZone);
-    console.log(this.excludedZones);
+    this.zonesService.getPath(this.selectedFromZone, this.selectedToZone, this.excludedZones)
+      .pipe(takeLast(1))
+      .subscribe(r => console.log(r));
   }
 }
 
