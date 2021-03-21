@@ -18,3 +18,15 @@ mat-form-field {
     color: white;
   }
 }
+
+mat-form-field {
+  font-size: 12px;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0;
+}
+
+::ng-deep .mat-form-field-subscript-wrapper {
+  display: none;
+}

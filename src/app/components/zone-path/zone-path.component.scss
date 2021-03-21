@@ -1,0 +1,20 @@
+$margin-bottom: 12px;
+
+.zone-path-title {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: $margin-bottom;
+
+  &__selector {
+    margin-right: 24px;
+    margin-bottom: $margin-bottom;
+  }
+
+  &__details {
+    margin-bottom: $margin-bottom;
+  }
+
+  .path-detail-info {
+    margin-right: 24px;
+  }
+}

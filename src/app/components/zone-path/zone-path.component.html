@@ -1,0 +1,17 @@
+<div class="zone-path-title">
+  <mat-button-toggle-group [(ngModel)]="selectedPathType"
+    class="zone-path-title__selector" appearance="legacy" name="pathType">
+    <mat-button-toggle [value]="pathTypes.byFee">By Fee</mat-button-toggle>
+    <mat-button-toggle [value]="pathTypes.byTransfersCount">By Transfers Count</mat-button-toggle>
+  </mat-button-toggle-group>
+  <div class="zone-path-title__details">
+    <span class="path-detail-info">Projected fee: 200</span>
+    <span class="path-detail-info">Transfers: 4</span>
+    <button  class="execute-all-btn" mat-flat-button>Execute All</button>
+  </div>
+</div>
+
+<sm-horizontal-snake-graph
+  [data]="zonesPath"
+  [colors]="colors">
+</sm-horizontal-snake-graph>
