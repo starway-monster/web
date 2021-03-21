@@ -1,29 +1,22 @@
 <div class="graph">
-  <ng-container *ngFor="let graphItemGroup of graphItemGroups">
+  <ng-container *ngFor="let graphItemGroup of graphItemGroups; index as indexRow">
     <div class="graph__row" [class.reverse]="graphItemGroup.isReverseRow">
-      <ng-container *ngFor="let item of graphItemGroup.items">
-        <div class="graph__item" [class.hidden]="item.value === undefined">
-          <div class="graph__item__row">
-            <div class="graph__item__cell item-right-arrow"
-              [class.hidden]="item.horizontalArrowHidden">
-              <div class="line"></div>
-              <div class="execute-btn">Execute</div>
-            </div>
-            <div class="graph__item__cell item-content">
-              <span class="item-content__text">{{item.value}}</span>
-              <div class="item-content__circle" [style.background-color]="getColor(item.value)"></div>
-            </div>
-          </div>
-          <div class="graph__item__row">
-            <div class="graph__item__cell"></div>
-            <div class="graph__item__cell item-bottom-arrow"
-              [class.hidden]="!item.isLastInRow || graphItemGroup.isLastRow">
-              <div class="line"></div>
-              <!-- <div class="execute-btn">Execute</div> -->
-            </div>
-          </div>
+      <ng-container *ngFor="let item of graphItemGroup.items; index as itemIndex">
+        <div class="item-horizontal-arrow" *ngIf="itemIndex > 0" [class.reverse]="graphItemGroup.isReverseRow">
+          <div class="horizontal-arrow"></div>
+          <div class="execute-btn">Execute</div>
+        </div>
+        <div class="item-content">
+          <span class="item-content__text">{{item.value}}</span>
+          <div class="item-content__circle" [style.background-color]="getColor(item.value)"></div>
         </div>
       </ng-container>
+    </div>
+    <div class="empty-row" [class.reverse]="graphItemGroup.isReverseRow" *ngIf="indexRow < graphItemGroups.length - 1">
+      <div class="item-vertical-arrow">
+        <div class="execute-btn">Execute</div>
+        <div class="vertical-arrow"></div>
+      </div>
     </div>
   </ng-container>
 </div>
