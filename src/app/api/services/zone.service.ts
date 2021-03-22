@@ -6,7 +6,7 @@ import { WatchQueryOptions } from '@apollo/client/core/watchQueryOptions';
 import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IZonesResult } from '../models/zone.model';
+import { IDependenciesResult, IZonesResult } from '../models/zone.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,15 @@ export class ZoneService {
     }
   `;
 
+  private readonly dependenciesQuery = gql`
+    query MyQuery {
+      edge: ibc_clients(distinct_on: [zone, chain_id], where: {ibc_connections: {ibc_channels: {}}}) {
+        zone1: zone
+        zone2: chain_id
+      }
+    }
+  `;
+
   constructor(private readonly apollo: Apollo,
     private readonly httpClient: HttpClient) { }
 
@@ -30,7 +39,15 @@ export class ZoneService {
     return this.apollo
       .watchQuery<IZonesResult>({
         query: this.allZonesQuery
-      } as WatchQueryOptions<any>)
+      } as WatchQueryOptions<IZonesResult>)
+      .valueChanges;
+  }
+
+  public getAllDependencies(): Observable<ApolloQueryResult<IDependenciesResult>> {
+    return this.apollo
+      .watchQuery<IDependenciesResult>({
+        query: this.dependenciesQuery
+      } as WatchQueryOptions<IDependenciesResult>)
       .valueChanges;
   }
 
@@ -39,7 +56,7 @@ export class ZoneService {
     params = params.append('from', fromZone);
     params = params.append('to', toZone);
     if (exclude) {
-      params = params.append('excluded', exclude.join(','));
+      params = params.append('exclude', exclude.join(','));
     }
     return this.httpClient.get(`${this.apiUrl}/way/search`, { params } )
   }

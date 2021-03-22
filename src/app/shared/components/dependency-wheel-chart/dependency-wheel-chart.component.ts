@@ -65,10 +65,11 @@ export class DependencyWheelChartComponent implements OnInit {
   }
 
   private updateChart() {
-    if (!this.svg) {
-      this.svg = this.createSvg();
-      this.createChart();
+    if (this.svg) {
+      d3.select('svg').remove();
     }
+    this.svg = this.createSvg();
+    this.createChart();
     this.matrix = this.getMatrix();
     this.createChords();
     this.createCircle();

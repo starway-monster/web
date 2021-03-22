@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
 import * as d3 from 'd3';
-import { Subscription } from 'rxjs';
-import { takeLast } from 'rxjs/operators';
-import { IZonesResult } from 'src/app/api/models/zone.model';
+import { ReplaySubject, Subscription } from 'rxjs';
+import { takeLast, takeUntil } from 'rxjs/operators';
+import { IDependenciesResult, IZonesResult } from 'src/app/api/models/zone.model';
 import { ZoneService } from 'src/app/api/services/zone.service';
 import { ChordsData } from 'src/app/shared/components/dependency-wheel-chart/dependency-wheel-chart.component';
 
@@ -27,20 +27,31 @@ export class DashboardComponent implements OnInit {
   selectedFromZone: string;
   selectedToZone: string;
   excludedZones: string[];
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private readonly zonesService: ZoneService,
     private readonly changeDetectorRef: ChangeDetectorRef) {  }
 
   ngOnInit() {
-    this.querySubstription = this.zonesService.getAllZones()
+    this.zonesService.getAllZones()
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((result: ApolloQueryResult<IZonesResult>) => {
         this.zonesPath = result?.data?.zones.map(z => z.name) ?? [];
+        this.changeDetectorRef.detectChanges();
+      });
+
+    this.zonesService.getAllDependencies()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((result: ApolloQueryResult<IDependenciesResult>) => {
+        this.zoneDependencies = result?.data?.edge
+          ?.map(edge => ({ source: edge.zone1, target: edge.zone2, value: 1 } as ChordsData))
         this.changeDetectorRef.detectChanges();
       });
   }
 
   ngOnDestroy() {
-    this.querySubstription.unsubscribe();
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 
   onSearch() {
