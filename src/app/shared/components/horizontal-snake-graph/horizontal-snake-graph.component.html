@@ -4,8 +4,8 @@
       <ng-container *ngFor="let item of graphItemGroup.items; index as itemIndex">
         <div class="item-horizontal-arrow" *ngIf="itemIndex > 0" [class.reverse]="graphItemGroup.isReverseRow">
           <div class="horizontal-arrow"></div>
-          <div class="execute-btn">Execute</div>
-        </div>
+          <button color="primary" class="execute-btn" mat-flat-button>Execute</button>
+      </div>
         <div class="item-content">
           <span class="item-content__text">{{item.value}}</span>
           <div class="item-content__circle" [style.background-color]="getColor(item.value)"></div>
@@ -14,7 +14,7 @@
     </div>
     <div class="empty-row" [class.reverse]="graphItemGroup.isReverseRow" *ngIf="indexRow < graphItemGroups.length - 1">
       <div class="item-vertical-arrow">
-        <div class="execute-btn">Execute</div>
+        <button color="primary" class="execute-btn" mat-flat-button>Execute</button>
         <div class="vertical-arrow"></div>
       </div>
     </div>

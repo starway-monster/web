@@ -1,6 +1,6 @@
 <div class="content">
   <div class="row">
-    <div class="col-12 col-lg-5">
+    <div class="col-12 col-lg-5 pr-lg-2">
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">Dependencies Graph</h3>
@@ -14,32 +14,32 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-lg-7">
+    <div class="col-12 col-lg-7 pl-lg-2">
       <div class="card">
         <div class="card-header">
           <h3 class="card-title">Search Path Graph</h3>
           <div class="card-body">
-            <div class="form-inline search-form">
-              <sm-zone-selector class="col-12 col-md-3"
+            <div class="form-inline search-form pb-3">
+              <sm-zone-selector class="col-12 col-md-3 pr-md-2"
                 [items]="zonesPath"
                 [label]="'From Zone'"
                 [colors]="colors"
                 [(selectedItem)]="selectedFromZone">
               </sm-zone-selector>
-              <sm-zone-selector class="col-12 col-md-3"
+              <sm-zone-selector class="col-12 col-md-3 pr-md-2"
                 [items]="zonesPath"
                 [label]="'To Zone'"
                 [colors]="colors"
                 [(selectedItem)]="selectedToZone">
               </sm-zone-selector>
-              <sm-zone-selector class="col-12 col-md-4"
+              <sm-zone-selector class="col-12 col-md-4 pr-md-2"
                 [isMultiple]="true"
                 [items]="zonesPath"
                 [label]="'Exclude Zone'"
                 [colors]="colors"
                 [(selectedItem)]="excludedZones">
               </sm-zone-selector>
-              <button mat-flat-button class="search-btn col-12 col-md-2 pb-18" (click)="onSearch()">Search</button>
+              <button mat-flat-button color="primary" class="search-btn col-12 col-md-2 pb-18" (click)="onSearch()">Search</button>
             </div>
             <sm-zone-path [zonesPath]="zonesPath" [colors]="colors"></sm-zone-path>
           </div>

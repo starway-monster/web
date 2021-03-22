@@ -1,13 +1,13 @@
-<div class="zone-path-title">
+<div class="zone-path-title mb-2">
   <mat-button-toggle-group [(ngModel)]="selectedPathType"
-    class="zone-path-title__selector" appearance="legacy" name="pathType">
+    class="zone-path-title__selector mb-2" appearance="legacy" name="pathType">
     <mat-button-toggle [value]="pathTypes.byFee">By Fee</mat-button-toggle>
     <mat-button-toggle [value]="pathTypes.byTransfersCount">By Transfers Count</mat-button-toggle>
   </mat-button-toggle-group>
-  <div class="zone-path-title__details">
+  <div class="zone-path-title__details mb-2">
     <span class="path-detail-info">Projected fee: 200</span>
     <span class="path-detail-info">Transfers: 4</span>
-    <button  class="execute-all-btn" mat-flat-button>Execute All</button>
+    <button color="primary" class="execute-all-btn" mat-flat-button>Execute All</button>
   </div>
 </div>
 

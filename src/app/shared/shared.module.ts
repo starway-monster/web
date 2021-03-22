@@ -6,6 +6,7 @@ import { ZoneSelectorComponent } from './zone-selector/zone-selector.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -16,6 +17,7 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatButtonModule,
     FormsModule
   ]
 })

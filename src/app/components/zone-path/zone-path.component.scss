@@ -1,20 +1,24 @@
-$margin-bottom: 12px;
+@import '~@angular/material/theming';
+
+$primary-color: map-get($mat-pink, 800);
 
 .zone-path-title {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: $margin-bottom;
 
   &__selector {
     margin-right: 24px;
-    margin-bottom: $margin-bottom;
-  }
-
-  &__details {
-    margin-bottom: $margin-bottom;
   }
 
   .path-detail-info {
     margin-right: 24px;
+  }
+}
+
+::ng-deep mat-button-toggle {
+  border: 1px solid $primary-color;
+
+  &.mat-button-toggle-checked {
+    background-color: $primary-color;
   }
 }
