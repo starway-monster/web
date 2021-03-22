@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { HorizontalSnakeGraphComponent } from 'src/app/shared/components/horizontal-snake-graph/horizontal-snake-graph.component';
 
 export enum PathType {
   byFee = 'byFee',
@@ -8,7 +9,8 @@ export enum PathType {
 @Component({
   selector: 'sm-zone-path',
   templateUrl: './zone-path.component.html',
-  styleUrls: ['./zone-path.component.scss']
+  styleUrls: ['./zone-path.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ZonePathComponent {
 

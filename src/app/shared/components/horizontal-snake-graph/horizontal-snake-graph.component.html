@@ -1,4 +1,4 @@
-<div class="graph">
+<div #graphContainer class="graph">
   <ng-container *ngFor="let graphItemGroup of graphItemGroups; index as indexRow">
     <div class="graph__row" [class.reverse]="graphItemGroup.isReverseRow">
       <ng-container *ngFor="let item of graphItemGroup.items; index as itemIndex">

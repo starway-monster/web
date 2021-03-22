@@ -1,6 +1,10 @@
 $item-size: 80px;
 $item-margin: 8px;
 
+:host {
+  display: block;
+}
+
 .graph {
   width: 100%;
   padding-top: 24px;

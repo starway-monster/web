@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 
 export interface IGraphItem {
   value: string;
@@ -15,7 +15,8 @@ export interface IGraphItemGroup {
 @Component({
   selector: 'sm-horizontal-snake-graph',
   templateUrl: './horizontal-snake-graph.component.html',
-  styleUrls: ['./horizontal-snake-graph.component.scss']
+  styleUrls: ['./horizontal-snake-graph.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HorizontalSnakeGraphComponent implements OnChanges {
 
@@ -25,15 +26,27 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
   @Input()
   colors: d3.ScaleOrdinal<string, string, never>;
 
+
+  @ViewChild('graphContainer')
+  graph: ElementRef;
+
+  @HostListener('window:resize', ['$event.target'])
+  onResize() {
+    this.generateNewItems(false);
+  }
+
   itemsInRow = 3;
 
   graphItemGroups: IGraphItemGroup[];
 
-  constructor() { }
+  private initialWidth = 600;
+  private stepWidthSize = 240;
+
+  constructor(private readonly changeDetectiorRef: ChangeDetectorRef) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.data && this.data) {
-      this.graphItemGroups = this.generateGraphItems(this.data, this.itemsInRow);
+      this.generateNewItems(true);
     }
   }
 
@@ -72,5 +85,27 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
 
   getColor(value: string) {
     return `${this.colors(value)}4D`;
+  }
+
+  generateNewItems(isDataChanged: boolean): void {
+    const itemsInRow = this.calculateItemsInRow();
+    if (itemsInRow !== this.itemsInRow || isDataChanged) {
+      this.itemsInRow = itemsInRow;
+      this.graphItemGroups = this.generateGraphItems(this.data, this.itemsInRow);
+      this.changeDetectiorRef.detectChanges();
+    }
+  }
+
+  private calculateItemsInRow(): number {
+    const width = this.graph?.nativeElement?.clientWidth;
+    let itemsInRow = 4;
+    if (width !== undefined) {
+      if (width < this.initialWidth) {
+        itemsInRow = 2;
+      } else if (width < this.initialWidth + this.stepWidthSize) {
+        itemsInRow = 3;
+      }
+    }
+    return itemsInRow;
   }
 }
