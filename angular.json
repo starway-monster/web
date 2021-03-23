@@ -54,7 +54,11 @@
               "src/assets/scss/black-dashboard.scss",
               "src/assets/scss/material-custom-theme.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "zen-observable",
+              "@cosmjs/stargate"
+            ]
           },
           "configurations": {
             "production": {
