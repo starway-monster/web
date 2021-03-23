@@ -7,7 +7,7 @@
           <div class="card-body">
             <sm-dependency-wheel-chart
               [data]="zoneDependencies"
-              [names]="zonesPath"
+              [names]="allZones"
               [colors]="colors">
             </sm-dependency-wheel-chart>
           </div>
@@ -21,27 +21,29 @@
           <div class="card-body">
             <div class="form-inline search-form pb-3">
               <sm-zone-selector class="col-12 col-md-3 pr-md-2"
-                [items]="zonesPath"
+                [items]="allZones"
                 [label]="'From Zone'"
                 [colors]="colors"
                 [(selectedItem)]="selectedFromZone">
               </sm-zone-selector>
               <sm-zone-selector class="col-12 col-md-3 pr-md-2"
-                [items]="zonesPath"
+                [items]="allZones"
                 [label]="'To Zone'"
                 [colors]="colors"
                 [(selectedItem)]="selectedToZone">
               </sm-zone-selector>
               <sm-zone-selector class="col-12 col-md-4 pr-md-2"
                 [isMultiple]="true"
-                [items]="zonesPath"
+                [items]="allZones"
                 [label]="'Exclude Zone'"
                 [colors]="colors"
                 [(selectedItem)]="excludedZones">
               </sm-zone-selector>
               <button mat-flat-button color="primary" class="search-btn col-12 col-md-2 pb-18" (click)="onSearch()">Search</button>
             </div>
-            <sm-zone-path [zonesPath]="zonesPath" [colors]="colors"></sm-zone-path>
+            <ng-container *ngIf="zonesBestPath">
+              <sm-zone-path [bestPathsDetails]="zonesBestPath" [colors]="colors"></sm-zone-path>
+            </ng-container>
           </div>
         </div>
       </div>

@@ -2,13 +2,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Host
 
 export interface IGraphItem {
   value: string;
-  isLastInRow: boolean;
-  horizontalArrowHidden: boolean;
 }
 
 export interface IGraphItemGroup {
   items: IGraphItem[];
-  isLastRow: boolean;
   isReverseRow: boolean;
 }
 
@@ -52,31 +49,18 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
 
   generateGraphItems(data: string[], n: number): IGraphItemGroup[] {
     let newArr: IGraphItemGroup[] = [];
-    let nestedArr = [];
-    let lastRowIndex = Math.floor((data.length - 1) / n);
+    let nestedArr: IGraphItem[] = [];
     for (let i = 0; i < data.length; i++) {
       const rowIndex = Math.floor(i / n);
       const colIndex = Math.floor(i % n);
       const isReverseRow = rowIndex % 2 === 1;
       const isLastInRow = colIndex === n - 1 || i === data.length - 1;
-      nestedArr.push({
-        value: data[i],
-        isLastInRow,
-        horizontalArrowHidden: !isReverseRow && nestedArr.length === 0
-          || isReverseRow && isLastInRow
-      });
+      nestedArr.push({ value: data[i] } as IGraphItem);
       if (isLastInRow) {
-        const undefinedCount = n - nestedArr.length;
-        nestedArr = [...nestedArr, ...Array(undefinedCount).fill({
-          value: undefined,
-          isLastInRow: true,
-          horizontalArrowHidden: true
-        })];
         newArr.push({
           items: nestedArr,
-          isLastRow: rowIndex === lastRowIndex,
           isReverseRow
-        });
+        } as IGraphItemGroup);
         nestedArr = [];
       }
     }

@@ -6,7 +6,7 @@ import { WatchQueryOptions } from '@apollo/client/core/watchQueryOptions';
 import { Apollo } from 'apollo-angular';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { IDependenciesResult, IZonesResult } from '../models/zone.model';
+import { IBestPathsDetails, IDependenciesResult, IZonesResult } from '../models/zone.model';
 
 @Injectable({
   providedIn: 'root'
@@ -51,13 +51,13 @@ export class ZoneService {
       .valueChanges;
   }
 
-  public getPath(fromZone: string, toZone: string, exclude?: string[]): Observable<any> {
+  public getPath(fromZone: string, toZone: string, exclude?: string[]): Observable<IBestPathsDetails> {
     let params = new HttpParams();
     params = params.append('from', fromZone);
     params = params.append('to', toZone);
     if (exclude) {
       params = params.append('exclude', exclude.join(','));
     }
-    return this.httpClient.get(`${this.apiUrl}/way/search`, { params } )
+    return this.httpClient.get<IBestPathsDetails>(`${this.apiUrl}/way/search`, { params } )
   }
 }

@@ -1,3 +1,4 @@
+import { IBestPathsDetails } from './../../api/models/zone.model';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
 import * as d3 from 'd3';
@@ -14,9 +15,10 @@ import { ChordsData } from 'src/app/shared/components/dependency-wheel-chart/dep
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit {
-  zonesPath = [];
-  colors = d3.scaleOrdinal(this.zonesPath, d3.schemeCategory10);
-  colorsArr = this.zonesPath.map(name => this.colors(name));
+  zonesBestPath: IBestPathsDetails = undefined;
+  allZones = [];
+  colors = d3.scaleOrdinal(this.allZones, d3.schemeCategory10);
+  colorsArr = this.allZones.map(name => this.colors(name));
   zoneDependencies: ChordsData[] = [
     {source:'irishub-1', target:'okwme', value:1},
     {source:'okwme', target:'cosmoshub-4', value:1},
@@ -36,7 +38,7 @@ export class DashboardComponent implements OnInit {
     this.zonesService.getAllZones()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((result: ApolloQueryResult<IZonesResult>) => {
-        this.zonesPath = result?.data?.zones.map(z => z.name) ?? [];
+        this.allZones = result?.data?.zones.map(z => z.name) ?? [];
         this.changeDetectorRef.detectChanges();
       });
 
@@ -57,7 +59,10 @@ export class DashboardComponent implements OnInit {
   onSearch() {
     this.zonesService.getPath(this.selectedFromZone, this.selectedToZone, this.excludedZones)
       .pipe(takeLast(1))
-      .subscribe(r => console.log(r));
+      .subscribe(result => {
+        this.zonesBestPath = result;
+        this.changeDetectorRef.detectChanges();
+      });
   }
 }
 
