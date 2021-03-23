@@ -68,6 +68,12 @@ $item-margin: 8px;
       height: $item-size;
       border-radius: 50%;
       border: 2px solid white;
+      opacity: 0.3;
+      mix-blend-mode: lighten;
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
 
     &__text {
