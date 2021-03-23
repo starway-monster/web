@@ -90,6 +90,26 @@ export class DependencyWheelChartComponent implements OnInit {
   }
 
   private createChords() {
+    const grads = this.svg.append('defs')
+      .selectAll('linearGradient')
+      .data(this.getChordData())
+      .enter()
+      .append('linearGradient')
+      .attr('id', d => this.getGradientId(d))
+      .attr('gradientUnits', 'userSpaceOnUse')
+      .attr('x1', d => this.innerRadius * Math.cos((d.source.endAngle-d.source.startAngle) / 2 + d.source.startAngle - Math.PI/2))
+      .attr('y1', d => this.innerRadius * Math.sin((d.source.endAngle-d.source.startAngle) / 2 + d.source.startAngle - Math.PI/2))
+      .attr('x2', d => this.innerRadius * Math.cos((d.target.endAngle-d.target.startAngle) / 2 + d.target.startAngle - Math.PI/2))
+      .attr('y2', d => this.innerRadius * Math.sin((d.target.endAngle-d.target.startAngle)));
+
+      grads.append('stop')
+        .attr('offset', '0%')
+        .attr('stop-color', d => this.colors(this.names[d.source.index]));
+
+      grads.append('stop')
+        .attr('offset', '100%')
+        .attr('stop-color', d => this.colors(this.names[d.target.index]));
+
     this.svg.append('g')
       .selectAll('g')
       .data(this.getChordData())
@@ -97,8 +117,8 @@ export class DependencyWheelChartComponent implements OnInit {
         .classed('chord', true)
         .attr('d', <any>this.ribbon)
         .attr('fill-opacity', 0.3)
-        .attr('fill', d => this.colors(this.names[d.target.index]))
-        .style('mix-blend-mode', 'lighten') // exclusion, lighten
+        .style('fill', d => `url(#${this.getGradientId(d)})`)
+        .style('mix-blend-mode', 'lighten')
       .on('mouseover', this.onChordMouseEvent(true))
       .on('mouseout', this.onChordMouseEvent(false))
   }
@@ -112,8 +132,8 @@ export class DependencyWheelChartComponent implements OnInit {
         .call(g => g.append('path')
           .classed('arc', true)
           .attr('d', <any>this.arc)
-          .attr('fill', d => this.colors(this.names[d.index])))
-      .on('mouseover', this.onArcMouseEvent(true))
+          .attr('fill', d => this.colors(this.names[d.index]))
+      ).on('mouseover', this.onArcMouseEvent(true))
       .on('mouseout', this.onArcMouseEvent(false));
   }
 
@@ -185,4 +205,6 @@ export class DependencyWheelChartComponent implements OnInit {
   private getOpacity(isOver: boolean) {
     return isOver ? 1 : 0.3;
   }
+
+  private getGradientId(d: any) { return 'linkGrad-' + d.source.index + '-' + d.target.index; }
 }
