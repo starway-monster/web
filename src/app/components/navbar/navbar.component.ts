@@ -13,6 +13,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  // tslint:disable-next-line:typedef
   async onConnectWallet() {
     if (!(window as any).getOfflineSigner || !(window as any).keplr) {
       alert('Please install keplr extension');
@@ -36,33 +37,30 @@ export class NavbarComponent implements OnInit {
       const accounts = await offlineSigner.getAccounts();
 
       // Initialize the gaia api with the offline signer that is injected by Keplr extension.
-      // const cosmJS = new SigningCosmosClient(
-      //   // "https://lcd-cosmoshub.keplr.app",
-      //   'https://lcd.musselnet.cosmwasm.com',
-      //   accounts[0].address,
-      //   offlineSigner,
-      // );
       alert('Addresses count: ' + Object.keys(accounts).length + '\n' + accounts[0].address);
       const client = await SigningStargateClient.connectWithSigner(
         'https://rpc.musselnet.cosmwasm.com',
         offlineSigner
       );
 
-      alert('Addresses count: ' + Object.keys(accounts).length + '\n' + accounts[0].address);
+      alert('Addresses count: ' + Object.keys(accounts).length + '\n' + accounts[0].denom);
 
-      // const result = await cosmJS.sendTokens(recipient, [{
-      //   denom: "uatom",
-      //   amount: amount.toString(),
-      // }]);
+      const result = await client.sendTokens(accounts[0].address, 'wasm1z9l5m7ctfvq4swtx0evy6cr9n739xtfhlvt29z', [{
+        denom: 'umayo',
+        amount: '1',
+      }]);
     }
   }
 
+  // tslint:disable-next-line:typedef
   onInterchainPath() {
   }
 
+  // tslint:disable-next-line:typedef
   onUnescrowToken() {
   }
 
+  // tslint:disable-next-line:typedef
   onChannels() {
   }
 }
