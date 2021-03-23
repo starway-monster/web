@@ -44,7 +44,7 @@ export class NavbarComponent implements OnInit {
       // );
       alert('Addresses count: ' + Object.keys(accounts).length + '\n' + accounts[0].address);
       const client = await SigningStargateClient.connectWithSigner(
-        'https://lcd.musselnet.cosmwasm.com',
+        'https://rpc.musselnet.cosmwasm.com',
         offlineSigner
       );
 
