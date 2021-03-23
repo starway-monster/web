@@ -12,4 +12,15 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onConnectWallet() {
+  }
+
+  onInterchainPath() {
+  }
+
+  onUnescrowToken() {
+  }
+
+  onChannels() {
+  }
 }
