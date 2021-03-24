@@ -25,9 +25,9 @@ export class ZoneService {
 
   private readonly dependenciesQuery = gql`
     query MyQuery {
-      edge: ibc_clients(distinct_on: [zone, chain_id], where: {ibc_connections: {ibc_channels: {}}}) {
+      edge: get_ibc_chain_graph_edges {
         zone1: zone
-        zone2: chain_id
+        zone2: counterparty_zone
       }
     }
   `;
