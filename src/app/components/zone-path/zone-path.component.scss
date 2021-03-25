@@ -1,6 +1,4 @@
-@import '~@angular/material/theming';
-
-$primary-color: map-get($mat-pink, 800);
+@import 'theme';
 
 .zone-path-title {
   display: flex;
@@ -16,9 +14,9 @@ $primary-color: map-get($mat-pink, 800);
 }
 
 ::ng-deep mat-button-toggle {
-  border: 1px solid $primary-color;
+  border: 1px solid $primary;
 
   &.mat-button-toggle-checked {
-    background-color: $primary-color;
+    background-color: $primary;
   }
 }

@@ -9,7 +9,7 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$color-app-primary: mat-palette($mat-pink, 800, 900, 300);
+$color-app-primary: mat-palette($mat-purple, 400, 700, 200);
 $color-app-accent:  mat-palette($mat-indigo, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
@@ -17,7 +17,7 @@ $color-app-warn:    mat-palette($mat-red);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as `color` or `typography`.
-$candy-app-theme: mat-dark-theme((
+$app-theme: mat-dark-theme((
   color: (
     primary: $color-app-primary,
     accent: $color-app-accent,
@@ -25,7 +25,17 @@ $candy-app-theme: mat-dark-theme((
   )
 ));
 
+$primary: mat-color($color-app-primary);
+$accent: mat-color($color-app-accent);
+$warn: mat-color($color-app-warn);
+
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($candy-app-theme);
+@include angular-material-theme($app-theme);
+
+$custom-typography: mat-typography-config(
+  $font-family: 'Poppins, "Helvetica Neue", sans-serif'
+);
+
+@include angular-material-typography($custom-typography);

@@ -41,9 +41,12 @@
               </sm-zone-selector>
               <button mat-flat-button color="primary" class="search-btn col-12 col-md-2 pb-18" (click)="onSearch()">Search</button>
             </div>
-            <ng-container *ngIf="zonesBestPath">
-              <sm-zone-path [bestPathsDetails]="zonesBestPath" [colors]="colors"></sm-zone-path>
+            <ng-container *ngIf="!initialState; else initialTemplate">
+              <ng-container *ngIf="zonesBestPath; else noPath">
+                <sm-zone-path [bestPathsDetails]="zonesBestPath" [colors]="colors"></sm-zone-path>
+              </ng-container>
             </ng-container>
+
           </div>
         </div>
       </div>
@@ -51,3 +54,10 @@
   </div>
 </div>
 
+<ng-template #initialTemplate>
+  <img alt="Initial state" src="assets/img/initial-state.png" />
+</ng-template>
+
+<ng-template #noPath>
+  <img alt="Path not found" src="assets/img/path-not-found.png" />
+</ng-template>

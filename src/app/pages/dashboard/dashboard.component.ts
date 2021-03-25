@@ -2,8 +2,8 @@ import { IBestPathsDetails } from './../../api/models/zone.model';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ApolloQueryResult } from '@apollo/client/core';
 import * as d3 from 'd3';
-import { ReplaySubject, Subscription } from 'rxjs';
-import { takeLast, takeUntil } from 'rxjs/operators';
+import { of, ReplaySubject, Subscription } from 'rxjs';
+import { catchError, finalize, takeLast, takeUntil } from 'rxjs/operators';
 import { IDependenciesResult, IZonesResult } from 'src/app/api/models/zone.model';
 import { ZoneService } from 'src/app/api/services/zone.service';
 import { ChordsData } from 'src/app/shared/components/dependency-wheel-chart/dependency-wheel-chart.component';
@@ -29,6 +29,8 @@ export class DashboardComponent implements OnInit {
   selectedFromZone: string;
   selectedToZone: string;
   excludedZones: string[];
+  initialState = true;
+
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   constructor(private readonly zonesService: ZoneService,
@@ -58,10 +60,17 @@ export class DashboardComponent implements OnInit {
 
   onSearch() {
     this.zonesService.getPath(this.selectedFromZone, this.selectedToZone, this.excludedZones)
-      .pipe(takeLast(1))
-      .subscribe(result => {
+      .pipe(
+        takeLast(1),
+        catchError(err => {
+          return of(undefined);
+        }),
+        finalize(() => {
+          this.initialState = false;
+          this.changeDetectorRef.detectChanges()
+        })
+      ).subscribe(result => {
         this.zonesBestPath = result;
-        this.changeDetectorRef.detectChanges();
       });
   }
 }
