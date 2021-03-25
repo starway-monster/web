@@ -50,10 +50,7 @@ export class DependencyWheelChartComponent implements OnInit {
   ngOnInit(): void {  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data && this.data) {
-      this.updateChart();
-    }
-    if (changes.names && this.names) {
+    if ((changes.data || changes.names) && this.data && this.names && this.names.length) {
       this.updateChart();
     }
     if (changes.hoveredChord) {
@@ -117,10 +114,11 @@ export class DependencyWheelChartComponent implements OnInit {
         .classed('chord', true)
         .attr('d', <any>this.ribbon)
         .attr('fill-opacity', 0.3)
+        .style('display', (d: any) => d.source.index === d.target.index ? 'none' : 'block')
         .style('fill', d => `url(#${this.getGradientId(d)})`)
         .style('mix-blend-mode', 'lighten')
       .on('mouseover', this.onChordMouseEvent(true))
-      .on('mouseout', this.onChordMouseEvent(false))
+      .on('mouseout', this.onChordMouseEvent(false));
   }
 
   private createCircle() {
@@ -138,14 +136,14 @@ export class DependencyWheelChartComponent implements OnInit {
   }
 
   private getMatrix() {
+    const index = new Map(this.names.map((name, i) => [name, i]));
+    const matrix = Array.from(index, () => new Array(this.names.length).fill(0));
+    for (const d of this.data)
+      matrix[index.get(d.source)][index.get(d.target)] += d.value;
     const existedNames = [...new Set([...this.data.map(d => d.source), ...this.data.map(d => d.target)])];
-    const index = new Map(existedNames.map((name, i) => [name, i]));
-    const matrix = Array.from(index, () => new Array(existedNames.length).fill(0));
-    for (const d of this.data) {
-      const sourceIndex = index.get(d.source);
-      const targetIndex = index.get(d.target);
-      if (sourceIndex !== undefined && targetIndex != undefined) {
-        matrix[sourceIndex][targetIndex] += d.value;
+    for (const name of this.names) {
+      if (!existedNames.includes(name)) {
+        matrix[index.get(name)][index.get(name)] = 0.2;
       }
     }
     return matrix;
