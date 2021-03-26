@@ -30,6 +30,8 @@ export class ZonePathComponent implements OnChanges {
 
   graphPath: string[];
 
+  hoveredItems$ = this.zoneEventsHandlerService.hoveredZones$;
+
   constructor(
     private readonly zoneEventsHandlerService: ZoneEventsHandlerService,
     private readonly changeDetectorRef: ChangeDetectorRef
@@ -56,7 +58,7 @@ export class ZonePathComponent implements OnChanges {
     this.changeDetectorRef.detectChanges();
   }
 
-  hoveredItemChanged(itemName: string) {
-    this.zoneEventsHandlerService.hoveredZone = itemName;
+  hoveredItemChanged(itemName: string[]) {
+    this.zoneEventsHandlerService.setHoveredZones(...itemName);
   }
 }

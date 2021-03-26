@@ -30,6 +30,6 @@ export class ZoneSelectorComponent {
   }
 
   public hoverItem(hoveredZone: string) {
-    this.zoneEventsHandlerService.hoveredZone = hoveredZone;
+    this.zoneEventsHandlerService.setHoveredZones(hoveredZone);
   }
 }

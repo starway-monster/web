@@ -1,6 +1,6 @@
 <div class="chart-legend">
   <div *ngFor="let name of names" (mouseenter)="hoverItem(name)" (mouseleave)="hoverItem(undefined)"
-    class="chart-legend__item" [class.hovered]="(hoveredZone$ | async) === name">
+    class="chart-legend__item" [class.hovered]="(hoveredZone$ | async).includes(name)">
     <span class="item-background" [style.background]="colors(name)"></span>
     {{name}}</div>
 </div>

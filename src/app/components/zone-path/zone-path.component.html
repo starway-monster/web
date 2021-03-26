@@ -14,5 +14,6 @@
 <sm-horizontal-snake-graph
   [data]="graphPath"
   [colors]="colors"
-  (hoveredItemChanged)="hoveredItemChanged($event)">
+  [hoveredItems]="hoveredItems$ | async"
+  (hoveredItemsChanged)="hoveredItemChanged($event)">
 </sm-horizontal-snake-graph>

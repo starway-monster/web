@@ -71,7 +71,7 @@ $item-margin: 8px;
       opacity: 0.3;
       mix-blend-mode: lighten;
 
-      &:hover {
+      &.hovered {
         opacity: 1;
       }
     }

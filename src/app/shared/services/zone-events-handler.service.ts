@@ -6,10 +6,10 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class ZoneEventsHandlerService {
 
-  private hoveredZoneSubj = new BehaviorSubject<string>(undefined);
-  public hoveredZone$ = this.hoveredZoneSubj.asObservable();
+  private hoveredZonesSubj = new BehaviorSubject<string[]>([]);
+  public hoveredZones$ = this.hoveredZonesSubj.asObservable();
 
-  set hoveredZone(value: string) {
-    this.hoveredZoneSubj.next(value);
+  setHoveredZones(... value: string[]) {
+    this.hoveredZonesSubj.next(value);
   }
 }

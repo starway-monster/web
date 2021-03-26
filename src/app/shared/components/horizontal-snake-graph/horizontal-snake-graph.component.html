@@ -9,7 +9,8 @@
         <div class="item-content">
           <span class="item-content__text">{{item.value}}</span>
           <div class="item-content__circle" [style.background-color]="colors(item.value)"
-            (mouseenter)="hoverItem(item.value)" (mouseleave)="hoverItem(undefined)"></div>
+            [class.hovered]="hoveredItems.includes(item.value)"
+            (mouseenter)="hoverItem(item.value)" (mouseleave)="hoverItem([])"></div>
         </div>
       </ng-container>
     </div>

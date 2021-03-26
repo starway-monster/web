@@ -23,8 +23,11 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
   @Input()
   colors: d3.ScaleOrdinal<string, string, never>;
 
+  @Input()
+  hoveredItems: string[] = [];
+
   @Output()
-  hoveredItemChanged = new EventEmitter<string>();
+  hoveredItemsChanged = new EventEmitter<string[]>();
 
 
   @ViewChild('graphContainer')
@@ -80,7 +83,7 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
   }
 
   hoverItem(zoneName: string) {
-    this.hoveredItemChanged.next(zoneName);
+    this.hoveredItemsChanged.next([zoneName]);
   }
 
   private calculateItemsInRow(): number {
