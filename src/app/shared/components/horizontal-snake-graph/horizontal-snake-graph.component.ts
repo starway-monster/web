@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnChanges, SimpleChanges, ViewChild, Output, EventEmitter } from '@angular/core';
 
 export interface IGraphItem {
   value: string;
@@ -22,6 +22,9 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
 
   @Input()
   colors: d3.ScaleOrdinal<string, string, never>;
+
+  @Output()
+  hoveredItemChanged = new EventEmitter<string>();
 
 
   @ViewChild('graphContainer')
@@ -67,10 +70,6 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
     return newArr;
   }
 
-  getColor(value: string) {
-    return `${this.colors(value)}4D`;
-  }
-
   generateNewItems(isDataChanged: boolean): void {
     const itemsInRow = this.calculateItemsInRow();
     if (itemsInRow !== this.itemsInRow || isDataChanged) {
@@ -78,6 +77,10 @@ export class HorizontalSnakeGraphComponent implements OnChanges {
       this.graphItemGroups = this.generateGraphItems(this.data, this.itemsInRow);
       this.changeDetectiorRef.detectChanges();
     }
+  }
+
+  hoverItem(zoneName: string) {
+    this.hoveredItemChanged.next(zoneName);
   }
 
   private calculateItemsInRow(): number {

@@ -1,4 +1,6 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ZoneEventsHandlerService } from './../../services/zone-events-handler.service';
+import { ChangeDetectionStrategy, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import * as d3 from 'd3';
 import { ChordSubgroup, DefaultArcObject } from 'd3';
 
@@ -11,7 +13,8 @@ export interface ChordsData {
 @Component({
   selector: 'sm-dependency-wheel-chart',
   templateUrl: './dependency-wheel-chart.component.html',
-  styleUrls: ['./dependency-wheel-chart.component.scss']
+  styleUrls: ['./dependency-wheel-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DependencyWheelChartComponent implements OnInit {
   @Input()
@@ -46,8 +49,18 @@ export class DependencyWheelChartComponent implements OnInit {
     .sortChords(d3.descending)
   formatValue = x => `${x.toFixed(0)}B`;
   svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
+  hoveredZone$: Observable<string>;
 
-  ngOnInit(): void {  }
+  constructor(private readonly zoneEventsHandlerService: ZoneEventsHandlerService) {  }
+
+  ngOnInit(): void {
+    this.hoveredZone$ = this.zoneEventsHandlerService.hoveredZone$;
+
+    this.zoneEventsHandlerService.hoveredZone$
+      .subscribe((hoveredZone) => {
+        this.handleGroupHover(hoveredZone);
+      })
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if ((changes.data || changes.names) && this.data && this.names && this.names.length) {
@@ -56,9 +69,10 @@ export class DependencyWheelChartComponent implements OnInit {
     if (changes.hoveredChord) {
       this.handleChordHover(this.hoveredChord);
     }
-    if (changes.hoveredGroup) {
-      this.handleGroupHover(this.hoveredGroup);
-    }
+  }
+
+  public hoverItem(hoveredZone: string) {
+    this.zoneEventsHandlerService.hoveredZone = hoveredZone;
   }
 
   private updateChart() {
@@ -168,9 +182,10 @@ export class DependencyWheelChartComponent implements OnInit {
   }
 
   private onArcMouseEvent(isOver: boolean) {
-    return (mouseEvent: any, _data: any) => {
+    return (mouseEvent: any, data: any) => {
       d3.select(mouseEvent.srcElement)
-        .attr('fill-opacity', this.getOpacity(isOver))
+        .attr('fill-opacity', this.getOpacity(isOver));
+      this.zoneEventsHandlerService.hoveredZone = isOver ? this.names[data.index] : undefined;
     }
   }
 

@@ -1,11 +1,12 @@
-import { EventEmitter, Input, Output } from '@angular/core';
+import { ZoneEventsHandlerService } from './../services/zone-events-handler.service';
+import { ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core';
 import { Component } from '@angular/core';
-import { IZone } from 'src/app/api/models/zone.model';
 
 @Component({
   selector: 'sm-zone-selector',
   templateUrl: './zone-selector.component.html',
-  styleUrls: ['./zone-selector.component.scss']
+  styleUrls: ['./zone-selector.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ZoneSelectorComponent {
 
@@ -22,7 +23,13 @@ export class ZoneSelectorComponent {
       this.selectedItemChange.emit(value);
   }
 
+  constructor(private readonly zoneEventsHandlerService: ZoneEventsHandlerService) { }
+
   get selectedItem(): string {
     return this.currentSelectedItem;
+  }
+
+  public hoverItem(hoveredZone: string) {
+    this.zoneEventsHandlerService.hoveredZone = hoveredZone;
   }
 }

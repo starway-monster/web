@@ -1,3 +1,4 @@
+import { ZoneEventsHandlerService } from './../../shared/services/zone-events-handler.service';
 import { IBestPathsDetails, IDetailedPathInformation } from './../../api/models/zone.model';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { HorizontalSnakeGraphComponent } from 'src/app/shared/components/horizontal-snake-graph/horizontal-snake-graph.component';
@@ -29,7 +30,10 @@ export class ZonePathComponent implements OnChanges {
 
   graphPath: string[];
 
-  constructor(private readonly changeDetectorRef: ChangeDetectorRef) {  }
+  constructor(
+    private readonly zoneEventsHandlerService: ZoneEventsHandlerService,
+    private readonly changeDetectorRef: ChangeDetectorRef
+  ) {  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.bestPathsDetails) {
@@ -50,5 +54,9 @@ export class ZonePathComponent implements OnChanges {
       return prev;
     }, []);
     this.changeDetectorRef.detectChanges();
+  }
+
+  hoveredItemChanged(itemName: string) {
+    this.zoneEventsHandlerService.hoveredZone = itemName;
   }
 }

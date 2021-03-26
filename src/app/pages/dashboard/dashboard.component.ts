@@ -15,7 +15,6 @@ import { ChordsData } from 'src/app/shared/components/dependency-wheel-chart/dep
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements OnInit {
-  zonesBestPath: IBestPathsDetails = undefined;
   allZones = [];
   colors = d3.scaleOrdinal(this.allZones, d3.schemeCategory10);
   colorsArr = this.allZones.map(name => this.colors(name));
@@ -26,10 +25,7 @@ export class DashboardComponent implements OnInit {
     {source:'swap-testnet-2001', target:'musselnet-3', value:1},
   ];
   querySubstription: Subscription;
-  selectedFromZone: string;
-  selectedToZone: string;
-  excludedZones: string[];
-  initialState = true;
+
 
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
@@ -56,22 +52,6 @@ export class DashboardComponent implements OnInit {
   ngOnDestroy() {
     this.destroyed$.next(true);
     this.destroyed$.complete();
-  }
-
-  onSearch() {
-    this.zonesService.getPath(this.selectedFromZone, this.selectedToZone, this.excludedZones)
-      .pipe(
-        takeLast(1),
-        catchError(err => {
-          return of(undefined);
-        }),
-        finalize(() => {
-          this.initialState = false;
-          this.changeDetectorRef.detectChanges()
-        })
-      ).subscribe(result => {
-        this.zonesBestPath = result;
-      });
   }
 }
 

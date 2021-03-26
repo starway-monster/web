@@ -7,10 +7,12 @@ import { SharedModule } from '../shared/shared.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
+import { DependencyGraphCardComponent } from './dependency-graph-card/dependency-graph-card.component';
+import { SearchGraphPathCardComponent } from './search-graph-path-card/search-graph-path-card.component';
 
 @NgModule({
-  declarations: [NavbarComponent, FooterComponent, ZonePathComponent],
-  exports: [NavbarComponent, FooterComponent, ZonePathComponent],
+  declarations: [NavbarComponent, FooterComponent, ZonePathComponent, DependencyGraphCardComponent, SearchGraphPathCardComponent],
+  exports: [NavbarComponent, FooterComponent, ZonePathComponent, DependencyGraphCardComponent, SearchGraphPathCardComponent],
   imports: [
     CommonModule,
     SharedModule,

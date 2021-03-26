@@ -1,7 +1,8 @@
 <mat-form-field appearance="outline">
   <mat-label>{{label}}</mat-label>
   <mat-select [(ngModel)]="selectedItem" [multiple]="isMultiple" disableOptionCentering>
-    <mat-option *ngFor="let item of items" [value]="item">
+    <mat-option *ngFor="let item of items" [value]="item"
+      (mouseenter)="hoverItem(item)" (mouseleave)="hoverItem(undefined)">
       <div class="option-item">
         <span [style.background]="colors(item)" class="option-item__circle"></span>
         <span class="option-item__name">{{item}}</span>

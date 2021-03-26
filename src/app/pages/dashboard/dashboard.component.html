@@ -1,63 +1,18 @@
 <div class="content">
   <div class="row">
     <div class="col-12 col-lg-5 pr-lg-2">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Dependencies Graph</h3>
-          <div class="card-body">
-            <sm-dependency-wheel-chart
-              [data]="zoneDependencies"
-              [names]="allZones"
-              [colors]="colors">
-            </sm-dependency-wheel-chart>
-          </div>
-        </div>
-      </div>
+      <sm-dependency-graph-card
+        [zoneNames]="allZones"
+        [zoneDependencies]="zoneDependencies"
+        [colors]="colors"
+      ></sm-dependency-graph-card>
     </div>
     <div class="col-12 col-lg-7 pl-lg-2">
-      <div class="card">
-        <div class="card-header">
-          <h3 class="card-title">Search Path Graph</h3>
-          <div class="card-body">
-            <div class="form-inline search-form pb-3">
-              <sm-zone-selector class="col-12 col-md-3 pr-md-2"
-                [items]="allZones"
-                [label]="'From Zone'"
-                [colors]="colors"
-                [(selectedItem)]="selectedFromZone">
-              </sm-zone-selector>
-              <sm-zone-selector class="col-12 col-md-3 pr-md-2"
-                [items]="allZones"
-                [label]="'To Zone'"
-                [colors]="colors"
-                [(selectedItem)]="selectedToZone">
-              </sm-zone-selector>
-              <sm-zone-selector class="col-12 col-md-4 pr-md-2"
-                [isMultiple]="true"
-                [items]="allZones"
-                [label]="'Exclude Zone'"
-                [colors]="colors"
-                [(selectedItem)]="excludedZones">
-              </sm-zone-selector>
-              <button mat-flat-button color="primary" class="search-btn col-12 col-md-2 pb-18" (click)="onSearch()">Search</button>
-            </div>
-            <ng-container *ngIf="!initialState; else initialTemplate">
-              <ng-container *ngIf="zonesBestPath; else noPath">
-                <sm-zone-path [bestPathsDetails]="zonesBestPath" [colors]="colors"></sm-zone-path>
-              </ng-container>
-            </ng-container>
-
-          </div>
-        </div>
-      </div>
+      <sm-search-graph-path-card
+        [zoneNames]="allZones"
+        [colors]="colors"
+      ></sm-search-graph-path-card>
     </div>
   </div>
 </div>
 
-<ng-template #initialTemplate>
-  <img alt="Initial state" src="assets/img/initial-state.png" />
-</ng-template>
-
-<ng-template #noPath>
-  <img alt="Path not found" src="assets/img/path-not-found.png" />
-</ng-template>
