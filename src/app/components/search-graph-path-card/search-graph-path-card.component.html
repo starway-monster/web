@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-header">
     <h3 class="card-title">Search Path Graph</h3>
-    <div class="card-body">
+    <div class="card-body text-center">
       <div class="form-inline search-form pb-3">
         <sm-zone-selector class="col-12 col-md-3 pr-md-2"
           [items]="zoneNames"
@@ -34,9 +34,9 @@
 </div>
 
 <ng-template #initialTemplate>
-  <img alt="Initial state" src="assets/img/initial-state.png" />
+  <img alt="Initial state" src="assets/img/initial-state.png"/>
 </ng-template>
 
 <ng-template #noPath>
-  <img alt="Path not found" src="assets/img/path-not-found.png" />
+  <img alt="Path not found" src="assets/img/path-not-found.png" class="not-found-img"/>
 </ng-template>

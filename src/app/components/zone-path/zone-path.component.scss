@@ -1,5 +1,18 @@
 @import 'theme';
 
+:host {
+  mat-button-toggle-group {
+    border-radius: 4px;
+    border: 1px solid $primary;
+
+    mat-button-toggle {
+      &.mat-button-toggle-checked {
+        background-color: $primary;
+      }
+    }
+  }
+}
+
 .zone-path-title {
   display: flex;
   flex-wrap: wrap;
@@ -13,10 +26,3 @@
   }
 }
 
-::ng-deep mat-button-toggle {
-  border: 1px solid $primary;
-
-  &.mat-button-toggle-checked {
-    background-color: $primary;
-  }
-}
