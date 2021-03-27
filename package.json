@@ -24,6 +24,7 @@
     "@apollo/client": "^3.0.0",
     "@cosmjs/stargate": "^0.24.1",
     "apollo-angular": "^2.4.0",
+    "bootstrap": "^4.6.0",
     "d3": "^6.6.0",
     "graphql": "^15.0.0",
     "path": "^0.12.7",

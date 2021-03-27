@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
 import { SigningStargateClient } from '@cosmjs/stargate';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'sm-navbar',

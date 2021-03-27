@@ -1,0 +1,39 @@
+<sm-card title="Search Path">
+  <div class="form-inline search-form pb-3">
+    <sm-zone-selector class="col-12 col-md-3 pr-md-2"
+      [items]="zoneNames"
+      [label]="'From Zone'"
+      [colors]="colors"
+      [(selectedItem)]="selectedFromZone">
+    </sm-zone-selector>
+    <sm-zone-selector class="col-12 col-md-3 pr-md-2"
+      [items]="zoneNames"
+      [label]="'To Zone'"
+      [colors]="colors"
+      [(selectedItem)]="selectedToZone">
+    </sm-zone-selector>
+    <sm-zone-selector class="col-12 col-md-4 pr-md-2"
+      [isMultiple]="true"
+      [items]="zoneNames"
+      [label]="'Exclude Zone'"
+      [colors]="colors"
+      [(selectedItem)]="excludedZones">
+    </sm-zone-selector>
+    <button mat-flat-button color="primary" class="search-btn col-12 col-md-2 pb-18" (click)="onSearch()">Search</button>
+  </div>
+  <div class="text-center">
+    <ng-container *ngIf="!initialState; else initialTemplate">
+      <ng-container *ngIf="zonesBestPath; else noPathTemplate">
+        <sm-zone-path [bestPathsDetails]="zonesBestPath" [colors]="colors"></sm-zone-path>
+      </ng-container>
+    </ng-container>
+  </div>
+</sm-card>
+
+<ng-template #initialTemplate>
+  <img alt="Initial state" src="assets/img/initial-state.png" class="col-12 col-md-9"/>
+</ng-template>
+
+<ng-template #noPathTemplate>
+  <img alt="Path not found" src="assets/img/path-not-found.png" class="col-12 col-md-9"/>
+</ng-template>

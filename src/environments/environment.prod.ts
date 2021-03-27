@@ -3,5 +3,5 @@ export const environment = {
   graphql: {
     url: 'https://api.starway.monster/v1/graphql'
   },
-  apiUrl: 'http://46.101.77.230:8085'
+  apiUrl: 'https://api2.starway.monster'
 };

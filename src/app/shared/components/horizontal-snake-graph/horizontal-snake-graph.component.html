@@ -5,10 +5,12 @@
         <div class="item-horizontal-arrow" *ngIf="itemIndex > 0" [class.reverse]="graphItemGroup.isReverseRow">
           <div class="horizontal-arrow"></div>
           <button color="primary" class="execute-btn" mat-flat-button>Execute</button>
-      </div>
+        </div>
         <div class="item-content">
           <span class="item-content__text">{{item.value}}</span>
-          <div class="item-content__circle" [style.background-color]="getColor(item.value)"></div>
+          <div class="item-content__circle" [style.background-color]="colors(item.value)"
+            [class.hovered]="hoveredItems.includes(item.value)"
+            (mouseenter)="hoverItem(item.value)" (mouseleave)="hoverItem([])"></div>
         </div>
       </ng-container>
     </div>

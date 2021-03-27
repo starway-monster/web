@@ -1,17 +1,19 @@
 <div class="zone-path-title mb-2">
-  <mat-button-toggle-group [(ngModel)]="selectedPathType"
+  <mat-button-toggle-group [ngModel]="selectedPathType" (ngModelChange)="onSelectedPathTypeChanged($event)"
     class="zone-path-title__selector mb-2" appearance="legacy" name="pathType">
-    <mat-button-toggle [value]="pathTypes.byFee">By Fee</mat-button-toggle>
     <mat-button-toggle [value]="pathTypes.byTransfersCount">By Transfers Count</mat-button-toggle>
+    <mat-button-toggle [value]="pathTypes.byFee">By Fee</mat-button-toggle>
   </mat-button-toggle-group>
   <div class="zone-path-title__details mb-2">
-    <span class="path-detail-info">Projected fee: 200</span>
-    <span class="path-detail-info">Transfers: 4</span>
+    <span class="path-detail-info">Projected fee: {{selectedPath.fee}}</span>
+    <span class="path-detail-info">Transfers: {{selectedPath.transfers}}</span>
     <button color="primary" class="execute-all-btn" mat-flat-button>Execute All</button>
   </div>
 </div>
 
 <sm-horizontal-snake-graph
-  [data]="zonesPath"
-  [colors]="colors">
+  [data]="graphPath"
+  [colors]="colors"
+  [hoveredItems]="hoveredItems$ | async"
+  (hoveredItemsChanged)="hoveredItemChanged($event)">
 </sm-horizontal-snake-graph>

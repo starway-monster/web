@@ -1,4 +1,6 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Observable } from 'rxjs';
+import { ZoneEventsHandlerService } from './../../services/zone-events-handler.service';
+import { ChangeDetectionStrategy, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import * as d3 from 'd3';
 import { ChordSubgroup, DefaultArcObject } from 'd3';
 
@@ -11,7 +13,8 @@ export interface ChordsData {
 @Component({
   selector: 'sm-dependency-wheel-chart',
   templateUrl: './dependency-wheel-chart.component.html',
-  styleUrls: ['./dependency-wheel-chart.component.scss']
+  styleUrls: ['./dependency-wheel-chart.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DependencyWheelChartComponent implements OnInit {
   @Input()
@@ -46,22 +49,30 @@ export class DependencyWheelChartComponent implements OnInit {
     .sortChords(d3.descending)
   formatValue = x => `${x.toFixed(0)}B`;
   svg: d3.Selection<SVGSVGElement, unknown, HTMLElement, any>;
+  hoveredZone$: Observable<string[]>;
 
-  ngOnInit(): void {  }
+  constructor(private readonly zoneEventsHandlerService: ZoneEventsHandlerService) {  }
+
+  ngOnInit(): void {
+    this.hoveredZone$ = this.zoneEventsHandlerService.hoveredZones$;
+
+    this.zoneEventsHandlerService.hoveredZones$
+      .subscribe((hoveredZone) => {
+        this.handleGroupHover(hoveredZone);
+      })
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.data && this.data) {
-      this.updateChart();
-    }
-    if (changes.names && this.names) {
+    if ((changes.data || changes.names) && this.data && this.names && this.names.length) {
       this.updateChart();
     }
     if (changes.hoveredChord) {
       this.handleChordHover(this.hoveredChord);
     }
-    if (changes.hoveredGroup) {
-      this.handleGroupHover(this.hoveredGroup);
-    }
+  }
+
+  public hoverItem(hoveredZone: string) {
+    this.zoneEventsHandlerService.setHoveredZones(hoveredZone);
   }
 
   private updateChart() {
@@ -90,6 +101,26 @@ export class DependencyWheelChartComponent implements OnInit {
   }
 
   private createChords() {
+    const grads = this.svg.append('defs')
+      .selectAll('linearGradient')
+      .data(this.getChordData())
+      .enter()
+      .append('linearGradient')
+      .attr('id', d => this.getGradientId(d))
+      .attr('gradientUnits', 'userSpaceOnUse')
+      .attr('x1', d => this.innerRadius * Math.cos((d.source.endAngle-d.source.startAngle) / 2 + d.source.startAngle - Math.PI/2))
+      .attr('y1', d => this.innerRadius * Math.sin((d.source.endAngle-d.source.startAngle) / 2 + d.source.startAngle - Math.PI/2))
+      .attr('x2', d => this.innerRadius * Math.cos((d.target.endAngle-d.target.startAngle) / 2 + d.target.startAngle - Math.PI/2))
+      .attr('y2', d => this.innerRadius * Math.sin((d.target.endAngle-d.target.startAngle)));
+
+      grads.append('stop')
+        .attr('offset', '0%')
+        .attr('stop-color', d => this.colors(this.names[d.source.index]));
+
+      grads.append('stop')
+        .attr('offset', '100%')
+        .attr('stop-color', d => this.colors(this.names[d.target.index]));
+
     this.svg.append('g')
       .selectAll('g')
       .data(this.getChordData())
@@ -97,10 +128,11 @@ export class DependencyWheelChartComponent implements OnInit {
         .classed('chord', true)
         .attr('d', <any>this.ribbon)
         .attr('fill-opacity', 0.3)
-        .attr('fill', d => this.colors(this.names[d.target.index]))
-        .style('mix-blend-mode', 'lighten') // exclusion, lighten
+        .style('display', (d: any) => d.source.index === d.target.index ? 'none' : 'block')
+        .style('fill', d => `url(#${this.getGradientId(d)})`)
+        .style('mix-blend-mode', 'lighten')
       .on('mouseover', this.onChordMouseEvent(true))
-      .on('mouseout', this.onChordMouseEvent(false))
+      .on('mouseout', this.onChordMouseEvent(false));
   }
 
   private createCircle() {
@@ -112,20 +144,20 @@ export class DependencyWheelChartComponent implements OnInit {
         .call(g => g.append('path')
           .classed('arc', true)
           .attr('d', <any>this.arc)
-          .attr('fill', d => this.colors(this.names[d.index])))
-      .on('mouseover', this.onArcMouseEvent(true))
+          .attr('fill', d => this.colors(this.names[d.index]))
+      ).on('mouseover', this.onArcMouseEvent(true))
       .on('mouseout', this.onArcMouseEvent(false));
   }
 
   private getMatrix() {
+    const index = new Map(this.names.map((name, i) => [name, i]));
+    const matrix = Array.from(index, () => new Array(this.names.length).fill(0));
+    for (const d of this.data)
+      matrix[index.get(d.source)][index.get(d.target)] += d.value;
     const existedNames = [...new Set([...this.data.map(d => d.source), ...this.data.map(d => d.target)])];
-    const index = new Map(existedNames.map((name, i) => [name, i]));
-    const matrix = Array.from(index, () => new Array(existedNames.length).fill(0));
-    for (const d of this.data) {
-      const sourceIndex = index.get(d.source);
-      const targetIndex = index.get(d.target);
-      if (sourceIndex !== undefined && targetIndex != undefined) {
-        matrix[sourceIndex][targetIndex] += d.value;
+    for (const name of this.names) {
+      if (!existedNames.includes(name)) {
+        matrix[index.get(name)][index.get(name)] = 0.2;
       }
     }
     return matrix;
@@ -143,21 +175,23 @@ export class DependencyWheelChartComponent implements OnInit {
     return (mouseEvent: any, data: any) => {
       d3.selectAll('.arc')
         .filter((d: ChordSubgroup) => d.index === data.source.index || d.index === data.target.index)
-        .attr('fill-opacity', this.getOpacity(isOver))
+        .attr('fill-opacity', this.getOpacity(isOver));
       d3.select(mouseEvent.srcElement)
-        .attr('fill-opacity', this.getOpacity(isOver))
+        .attr('fill-opacity', this.getOpacity(isOver));
+      const hoveredItems = isOver ? [this.names[data.source.index], this.names[data.target.index]] : [];
+      this.zoneEventsHandlerService.setHoveredZones(...hoveredItems);
     }
   }
 
   private onArcMouseEvent(isOver: boolean) {
-    return (mouseEvent: any, _data: any) => {
-      d3.select(mouseEvent.srcElement)
-        .attr('fill-opacity', this.getOpacity(isOver))
+    return (_mouseEvent: any, data: any) => {
+      const hoveredItems = isOver ? [this.names[data.index]] : [];
+      this.zoneEventsHandlerService.setHoveredZones(...hoveredItems);
     }
   }
 
 
-  private handleGroupHover(hoveredGroup: string) {
+  private handleGroupHover(hoveredGroup: string[]) {
     d3.selectAll('.arc')
       .attr('fill-opacity', this.getOpacity(false));
     d3.selectAll('.arc')
@@ -173,8 +207,8 @@ export class DependencyWheelChartComponent implements OnInit {
       .attr('fill-opacity', this.getOpacity(true));
   }
 
-  private groupFilter(d: ChordSubgroup, group: string) {
-    return group && (d.index === this.names.indexOf(group));
+  private groupFilter(d: ChordSubgroup, group: string[]) {
+    return group && group.length > 0 && group.includes(this.names[d.index]);
   }
 
   private chordFilter(d: ChordSubgroup, chord: ChordsData) {
@@ -185,4 +219,6 @@ export class DependencyWheelChartComponent implements OnInit {
   private getOpacity(isOver: boolean) {
     return isOver ? 1 : 0.3;
   }
+
+  private getGradientId(d: any) { return 'linkGrad-' + d.source.index + '-' + d.target.index; }
 }

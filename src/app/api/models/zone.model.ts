@@ -14,3 +14,20 @@ export interface IEdge {
 export interface IDependenciesResult {
   edge: IEdge[];
 }
+
+export interface IBestPathsDetails {
+  pathByFee: IDetailedPathInformation;
+  pathByTransfers: IDetailedPathInformation;
+}
+
+export interface IDetailedPathInformation {
+  fee: number;
+  transfers: number;
+  graph: IPath[]
+}
+
+export interface IPath {
+  fromZone: string;
+  toZone: string;
+  fee: number;
+}
