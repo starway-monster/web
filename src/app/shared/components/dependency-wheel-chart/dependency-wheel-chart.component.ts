@@ -184,9 +184,7 @@ export class DependencyWheelChartComponent implements OnInit {
   }
 
   private onArcMouseEvent(isOver: boolean) {
-    return (mouseEvent: any, data: any) => {
-      d3.select(mouseEvent.srcElement)
-        .attr('fill-opacity', this.getOpacity(isOver));
+    return (_mouseEvent: any, data: any) => {
       const hoveredItems = isOver ? [this.names[data.index]] : [];
       this.zoneEventsHandlerService.setHoveredZones(...hoveredItems);
     }

@@ -50,8 +50,8 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss",
-              "src/assets/scss/black-dashboard.scss",
               "src/assets/scss/_theme.scss"
             ],
             "stylePreprocessorOptions": {
@@ -120,8 +120,8 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss",
-              "src/assets/scss/black-dashboard.scss",
               "src/assets/scss/_theme.scss"
             ],
             "stylePreprocessorOptions": {
