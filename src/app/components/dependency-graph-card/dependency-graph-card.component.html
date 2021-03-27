@@ -1,12 +1,7 @@
-<div class="card">
-  <div class="card-header">
-    <h3 class="card-title">Interchain Graph</h3>
-    <div class="card-body">
-      <sm-dependency-wheel-chart
-        [data]="zoneDependencies"
-        [names]="zoneNames"
-        [colors]="colors">
-      </sm-dependency-wheel-chart>
-    </div>
-  </div>
-</div>
+<sm-card title="Interchain Graph">
+  <sm-dependency-wheel-chart
+    [data]="zoneDependencies"
+    [names]="zoneNames"
+    [colors]="colors">
+  </sm-dependency-wheel-chart>
+</sm-card>
