@@ -7,12 +7,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { CardComponent } from './components/card/card.component';
 
 
 
 @NgModule({
-  declarations: [HorizontalSnakeGraphComponent, DependencyWheelChartComponent, ZoneSelectorComponent],
-  exports: [HorizontalSnakeGraphComponent, DependencyWheelChartComponent, ZoneSelectorComponent],
+  declarations: [HorizontalSnakeGraphComponent, DependencyWheelChartComponent, ZoneSelectorComponent, CardComponent],
+  exports: [HorizontalSnakeGraphComponent, DependencyWheelChartComponent, ZoneSelectorComponent, CardComponent],
   imports: [
     CommonModule,
     MatFormFieldModule,
