@@ -23,7 +23,7 @@
   </div>
   <div class="text-center">
     <ng-container *ngIf="!initialState; else initialTemplate">
-      <ng-container *ngIf="zonesBestPath; else noPath">
+      <ng-container *ngIf="zonesBestPath; else noPathTemplate">
         <sm-zone-path [bestPathsDetails]="zonesBestPath" [colors]="colors"></sm-zone-path>
       </ng-container>
     </ng-container>
@@ -31,9 +31,9 @@
 </sm-card>
 
 <ng-template #initialTemplate>
-  <img alt="Initial state" src="assets/img/initial-state.png"/>
+  <img alt="Initial state" src="assets/img/initial-state.png" class="col-12 col-md-9"/>
 </ng-template>
 
-<ng-template #noPath>
-  <img alt="Path not found" src="assets/img/path-not-found.png" class="not-found-img"/>
+<ng-template #noPathTemplate>
+  <img alt="Path not found" src="assets/img/path-not-found.png" class="col-12 col-md-9"/>
 </ng-template>
