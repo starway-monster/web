@@ -69,20 +69,8 @@ export class NavbarComponent implements OnInit {
     alert('start');
     const accounts = await NavbarComponent.offlineSigner.getAccounts();
     alert('Addresses count: ' + Object.keys(accounts).length + '\n' + accounts[0].address);
-    // const accounts2 = await NavbarComponent.offlineSigner2.getAccounts();
-
-    // const rpc = 'http://localhost:26657';
-    // const mnemonic =
-    //   'panther script topic village antenna penalty change artwork earth alone cotton reveal';
-
-    // const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic);
 
     const txc = await txClient('https://rpc.musselnet.cosmwasm.com', NavbarComponent.offlineSigner, accounts[0].address);
-    // const txc = await SigningStargateClient.connectWithSigner(
-    //   'https://rpc.musselnet.cosmwasm.com',
-    //   NavbarComponent.offlineSigner
-    // );
-    let date = new Date('2021-03-28T10:03:10.941939701Z');
     const msgTransferData = await MsgTransfer.fromJSON({
       sourcePort: 'transfer',
       sourceChannel: 'channel-7',
@@ -95,7 +83,7 @@ export class NavbarComponent implements OnInit {
       // timeoutHeight: {
       //   // revisionHeight: 12497931
       // }
-      timeoutTimestamp: date.getTime() * 1000000
+      timeoutTimestamp: Date.now() * 1000000
     });
 
     const an_encoded_transfer_message = txc.msgTransfer(msgTransferData);
