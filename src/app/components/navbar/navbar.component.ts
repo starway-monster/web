@@ -1,5 +1,8 @@
-import { SigningStargateClient } from '@cosmjs/stargate';
-import { Component, OnInit } from '@angular/core';
+import {isBroadcastTxFailure, isBroadcastTxSuccess, SigningStargateClient} from '@cosmjs/stargate';
+import {Component, OnInit} from '@angular/core';
+import {txClient} from '../module';
+
+import {MsgTransfer} from '../module/types/ibc/applications/transfer/v1/tx';
 
 @Component({
   selector: 'sm-navbar',
@@ -12,13 +15,15 @@ export class NavbarComponent implements OnInit {
   private static offlineSigner;
   private static offlineSigner2;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
 
   // tslint:disable-next-line:typedef
   async onConnectWallet() {
+    alert('onConnectWallet');
     if (!(window as any).getOfflineSigner || !(window as any).keplr) {
       alert('Please install keplr extension');
     } else {
@@ -57,6 +62,51 @@ export class NavbarComponent implements OnInit {
       amount: '1',
     }]);
     alert('tx_hash: ' + result.transactionHash);
+  }
+
+  // tslint:disable-next-line:typedef
+  async onExecuteSingle() {
+    alert('start');
+    const accounts = await NavbarComponent.offlineSigner.getAccounts();
+    alert('Addresses count: ' + Object.keys(accounts).length + '\n' + accounts[0].address);
+    // const accounts2 = await NavbarComponent.offlineSigner2.getAccounts();
+
+    // const rpc = 'http://localhost:26657';
+    // const mnemonic =
+    //   'panther script topic village antenna penalty change artwork earth alone cotton reveal';
+
+    // const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic);
+
+    const txc = await txClient('https://rpc.musselnet.cosmwasm.com', NavbarComponent.offlineSigner, accounts[0].address);
+    // const txc = await SigningStargateClient.connectWithSigner(
+    //   'https://rpc.musselnet.cosmwasm.com',
+    //   NavbarComponent.offlineSigner
+    // );
+    let date = new Date('2021-03-28T10:03:10.941939701Z');
+    const msgTransferData = await MsgTransfer.fromJSON({
+      sourcePort: 'transfer',
+      sourceChannel: 'channel-7',
+      token: {
+        denom: 'umayo',
+        amount: '1',
+      },
+      sender: accounts[0].address,
+      receiver: 'tcro1n0d8n44jyrvmymuqmyrnp0zm9fx8esmvzf8qwx',
+      // timeoutHeight: {
+      //   // revisionHeight: 12497931
+      // }
+      timeoutTimestamp: date.getTime() * 1000000
+    });
+
+    const an_encoded_transfer_message = txc.msgTransfer(msgTransferData);
+    const result_of_broadcast = await txc.signAndBroadcast([an_encoded_transfer_message]);
+    if (isBroadcastTxFailure(result_of_broadcast)) {
+      console.log('code' + result_of_broadcast.code);
+    }
+    console.log('success' + isBroadcastTxSuccess(result_of_broadcast));
+    console.log('fail' + isBroadcastTxFailure(result_of_broadcast));
+    console.log('tx_hash: ' + result_of_broadcast.transactionHash);
+    console.log('log:' + result_of_broadcast.rawLog);
   }
 
   // tslint:disable-next-line:typedef
